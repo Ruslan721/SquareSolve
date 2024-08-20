@@ -5,7 +5,7 @@
 const double e = 1e-20;
 
 void InputFunc(double* a, double* b, double* c);
-void SqrSolution(double a, double b, double c, double* x1, double* x2);
+int SqrSolution(double a, double b, double c, double* x1, double* x2);
 double Diskr(double a, double b, double c);
 int DoubleComp(double a, double b);
 int Restart(int* key);
@@ -25,7 +25,21 @@ int main()
 
         InputFunc(&a,&b,&c);
 
-        SqrSolution(a, b,  c, &x1, &x2);
+        int res = SqrSolution(a, b,  c, &x1, &x2);
+
+        switch (res)
+        {
+        case 0: printf("Нет решений\n\n");
+                break;
+
+        case 1: printf("Корень уравнения: %.2lg\n\n",x1);
+                break;
+
+        case 2: printf("Корни уравнения: %.2lg, %.2lg\n\n", x1, x2);
+                break;
+
+        default: printf("error");
+        }
 
         Restart(&key);
     }
@@ -45,23 +59,26 @@ void InputFunc(double* a, double* b, double* c)
     }
 }
 
-void SqrSolution(double a, double b, double c, double* x1, double* x2)
+int SqrSolution(double a, double b, double c, double* x1, double* x2)
 {
     if (!(DoubleComp(a,0)))
     {
         double d = Diskr(a,b,c);
         if (DoubleComp(d,0))
-            printf("Корень уравнения: %.2lg\n\n",-(b / 2 / a));
-
+        {
+            *x1 = *x2 = -(b / 2 / a);
+            return 1;
+        }
         else if (d > 0)
         {
-            *x1 = (-b - sqrt(d))/2/a;
-            *x2 = (- b + sqrt(d))/2/a;
-            printf("Корни уравнения: %.2lg, %.2lg\n\n", *x1, *x2);
+            d = sqrt(d)/2/a;
+            *x1 = -b/2/a + d;
+            *x2 = - b/2/a - d;
+            return 2;
         }
         else
         {
-            printf("Нет решений\n\n");
+            return 0;
         }
     }
     else

@@ -9,10 +9,18 @@ int SqrSolution(double a, double b, double c, double* x1, double* x2);
 double Diskr(double a, double b, double c);
 int DoubleComp(double a, double b);
 int Restart(int* key);
+/*int RunTest(double a, double b, double c, double x1_exp, double x2_exp, int nRoots_exp);
+void InputFunc_RT(double* a, double* b, double* c, double* x1_exp, double* x2_exp, int* nRoots_exp);*/
 
 int main()
 {
     setlocale(LC_ALL, "Rus");
+     /*
+    double a = 0, b = 0, c = 0, x1_exp = 0, x2_exp = 0;         // тест
+    int nRoots_exp = 0;
+    InputFunc_RT(&a, &b, &c, &x1_exp, &x2_exp, &nRoots_exp);
+    RunTest(a, b, c, x1_exp, x2_exp, nRoots_exp); */
+
 
     int key = 1;
     while (key == 1 || key == 0)
@@ -45,7 +53,7 @@ int main()
     }
         return 0;
 }
-void InputFunc(double* a, double* b, double* c)
+void InputFunc( double* const a, double* const b, double* const c)
 {
     int num =0;
 
@@ -54,11 +62,12 @@ void InputFunc(double* a, double* b, double* c)
     printf("Введите значения коэффициэнтов\n"
            "квадратного уравнения: ");
     num = scanf("%lg %lg %lg", a, b, c);
-    while(getchar() != '\n') {}
+
+    while(getchar() != '\n') {}   //?
     }
 }
 
-int SqrSolution(double a, double b, double c, double* x1, double* x2)
+int SqrSolution(const double a,const double b,const double c, double* const x1, double* const x2)
 {
     if (!(DoubleComp(a,0)))
     {
@@ -87,20 +96,17 @@ int SqrSolution(double a, double b, double c, double* x1, double* x2)
     }
 }
 
-double Diskr(double a, double b, double c)
+double Diskr(const double a,const double b,const double c)
 {
     return b*b - 4*a*c;
 }
 
-int DoubleComp(double a, double b)
+int DoubleComp(const double a, const double b)
 {
-    if (fabs(a - b) > e)
-        return 0;
-    else
-        return 1;
+    return fabs(a - b) > e;
 }
 
-int Restart(int* key)
+int Restart( int* const key)
 {
     while (*key != 1 && *key != 0)
     {
@@ -112,3 +118,29 @@ int Restart(int* key)
 
     return 0;
 }
+
+/*int RunTest(const double a,const double b,const double c,const double x1_exp,const double x2_exp,const int nRoots_exp)    //тест
+{
+    double x1 = 0, x2 = 0;
+    int nRoots = SqrSolution(a,b,c,&x1, &x2);
+    if (x1 != x1_exp || x2 != x2_exp || nRoots != nRoots_exp)
+    {
+        printf("Error\na = %.2lg, b = %.2lg, c = %.2lg\n"
+                "      x1    x2\nExp   %-6.2lg%.2lg\nRes   %-6.2lg%.2lg\n", a, b, c, x1_exp, x2_exp, x1, x2);
+    }
+    else
+    {
+        printf("perfect!\n");
+    }
+}
+
+void InputFunc_RT( double* const a, double* const b, double* const c, double* const x1_exp, double* const x2_exp, int* const nRoots_exp)
+{
+    printf("Введите три коэффициента квадратного уравнения,\n"
+            "верные корни этого уравнения и количество различных\n"
+            "значений корня последовательно: ");
+    scanf("%lg %lg %lg %lg %lg %d", a, b, c, x1_exp, x2_exp, nRoots_exp);
+} */
+
+
+//оптимизировать ввод

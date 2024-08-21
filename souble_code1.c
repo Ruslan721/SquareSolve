@@ -45,7 +45,6 @@ int main()
     }
         return 0;
 }
-
 void InputFunc(double* a, double* b, double* c)
 {
     int num =0;
@@ -83,8 +82,8 @@ int SqrSolution(double a, double b, double c, double* x1, double* x2)
     }
     else
     {
-        printf("Задайте старший коэффициент\n"
-              "отличный от нуля\n\n");
+        *x1 = *x2 = -c / b;
+        return 1;
     }
 }
 

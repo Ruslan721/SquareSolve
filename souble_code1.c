@@ -21,11 +21,11 @@ int main()
     setlocale(LC_ALL, "Rus");
 
 
-   //InputFunc_RT();
-    //InputTests_RT();       // тест
+    //InputFunc_RT();
+    //InputTests_RT();       // тесты
 
 
-    InputFunc();
+    InputFunc();          // квадратка
 
 
     return 0;
@@ -89,7 +89,10 @@ int SqrSolution(const double a,const double b,const double c, double* const x1, 
     }
     else
     {
-        return INF;
+        if (DoubleComp(c,0))
+            return INF;
+        else
+            return 0;
     }
 }
 
@@ -130,7 +133,7 @@ int Restart( int* const key)
     printf("Продолжть[ 1 ]\n"
             "Остановить[ 0 ]\n");
     while(getchar() != '\n') {}
-    int nkey = scanf("%d", key);
+    scanf("%d", key);
     }
 
     return 0;
@@ -144,7 +147,7 @@ void RunTest(const double a,const double b,const double c,const double x1_exp,co
     if (!(DoubleComp(x1,x1_exp)) || !(DoubleComp(x2,x2_exp)) || !(DoubleComp(nRoots,nRoots_exp)))
     {
         printf("\nError\n------------------\na = %.2lg, b = %.2lg, c = %.2lg\n"
-                "      x1    x2\nExp   %-6.2lg%.2lg\nRes   %-6.2lg%.2lg\n------------------\n", a, b, c, x1_exp, x2_exp, x1, x2);  //\t
+                "      x1    x2\nExp   %-6.2lg%-6.2lg%-6d\nRes   %-6.2lg%-6.2lg%-6d\n------------------\n", a, b, c, x1_exp, x2_exp, nRoots_exp, x1, x2, nRoots);  //\t
     }
     else
     {
@@ -155,21 +158,18 @@ void RunTest(const double a,const double b,const double c,const double x1_exp,co
 
 void InputTests_RT()
 {
+    double TestsDouble [30] = { 1,1,1,0,0,
+                                1,-4,4,2,2,
+                                0,0,0,0,0,
+                                1,-3,2,1,2,
+                                0,1,-2,2,2,
+                                0,0,1,0,0};
 
-    printf("test 1\n");
-    RunTest(1,-2,1,1,1,1);
-
-    printf("test 2\n");
-    RunTest(1,-4,4,2,2,1);
-
-    printf("test 3\n");
-    RunTest(1,-3,2,1,2,2);
-
-    printf("test 4\n");
-    RunTest(0,1,-1,1,1,1);
-
-    printf("test 5\n");
-    RunTest(0,0,1,0,0,INF);
+    int TestsInt [6] = {0, 1, INF, 2, 1, 0};        //
+    for (int i = 0; i < 6; i++)
+    {
+        RunTest(TestsDouble[i*5], TestsDouble[i*5+ 1], TestsDouble[i*5+ 2], TestsDouble[i*5+3], TestsDouble[i*5+4], TestsInt[i]);
+    }
 }
 
 void InputFunc_RT()
@@ -186,7 +186,7 @@ void InputFunc_RT()
 
         printf("Введите три коэффициента квадратного уравнения,\n"
                 "верные корни этого уравнения и количество различных\n"
-                "значений корня последовательно: ");
+                "значений корня последовательно:\n");
         scanf("%lg %lg %lg %lg %lg %d", &a, &b, &c, &x1_exp, &x2_exp, &nRoots_exp);
 
         RunTest(a, b, c, x1_exp, x2_exp, nRoots_exp);
@@ -195,8 +195,8 @@ void InputFunc_RT()
     }
 }
 
-
-
+//assert(x1!= NULL);
+// %c в конце ввода
 //оптимизировать ввод (ввод -> счёт -> вывод), цикл в вводе   \/
 //чтение файла
 //текстовый ввод

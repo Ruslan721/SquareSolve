@@ -1,0 +1,1 @@
+g++ -c Test_Manager.c -o Test_Manager.o

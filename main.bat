@@ -1,1 +1,1 @@
-g++ -c souble_code1.c -o souble_code1.o
+g++ -c souble_code1.cpp -o souble_code1.o

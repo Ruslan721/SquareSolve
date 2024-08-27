@@ -1,0 +1,1 @@
+g++ -c SolveSquare.cpp -o SolveSquare.o

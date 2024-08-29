@@ -5,28 +5,31 @@
 
 //-----------------------------------------------
 
-void Input_SqrSolution(Equ_Coeff* Sqr_Input)       //->                 //(*test).a
+void Input_Sqr_Solution(Equality_Coeff* const Sqr_Input)       //->                 //(*test).a
 {
+    assert(Sqr_Input != 0);
 
-int num = 0, Flag = -1;
-while (num != 3 && Flag)
+    int num = 0, Flag = -1;
+    while (Flag == -1)
     {
+
         printf( "\nВведите значения коэффициэнтов\n"
                 "квадратного уравнения:\n\n");
         num = scanf("%lg %lg %lg", &(Sqr_Input->a), &(Sqr_Input->b), &(Sqr_Input->c));   //?
 
-        if (num != 3)
+        if (num == 3)
         {
-            Clear_All_Buffer();       //1 -2 1a     //если 1 то continue
+            Flag = 1;       //1 -2 1a     //если 1 то continue
         }
 
-        Find_Evil_In_Buffer(&Flag);
+        Find_Symbol_In_Buffer(&Flag);
+
     }
 }
 
 //-----------------------------------------------
                                                                      //TestStr
- void Manager_SqrSolution()
+ void Manager_Sqr_Solution()
 {
     int key = 1;  // <-- enum
     while (key == 1 || key == 0)
@@ -34,13 +37,13 @@ while (num != 3 && Flag)
         if (key == 0)
             break;
         key = -1;
-        Equ Sqr_Input = {{NAN, NAN, NAN}, {NOT_A_ROOT, NOT_A_ROOT, -1}};
+        Equality Sqr_Input = {{NAN, NAN, NAN}, {NOT_A_ROOT, NOT_A_ROOT, -1}};
 
-        Input_SqrSolution(&Sqr_Input.coeff);
+        Input_Sqr_Solution(&Sqr_Input.coeff);
 
-        int res = SqrSolution(&Sqr_Input);
+        int res = Sqr_Solution(&Sqr_Input);
 
-        Output_SqrSolution(res, &Sqr_Input);
+        Output_Sqr_Solution(res, &Sqr_Input);
 
         Restart(&key);
     }
@@ -49,37 +52,40 @@ while (num != 3 && Flag)
 
 //-----------------------------------------------
 
-int SqrSolution(Equ* const Sqr_Input)    // struct, NAN
+int Sqr_Solution(Equality* const Sqr_Input)    // struct, NAN
 {
+    assert(Sqr_Input);
 
-    if (! DoubleEqual(Sqr_Input->coeff.a, 0))
+    if (! Double_Equal(Sqr_Input->coeff.a, 0))
     {
-        return SqrEq(Sqr_Input);
+        return Sqr_Equality(Sqr_Input);
     }
     else
     {
-        return LinearEq(Sqr_Input);
+        return Linear_Equality(Sqr_Input);
     }
 }
 
 //-----------------------------------------------
 
-int SqrEq(Equ* const Sqr_Input)   //struct
+int Sqr_Equality(Equality* const Sqr_Input)   //struct
 {
+    assert(Sqr_Input != 0);
+
     double* x1 = &(Sqr_Input->roots.x1);
     double* x2 = &(Sqr_Input->roots.x2);
 
-    double d = Diskr(Sqr_Input->coeff.a, Sqr_Input->coeff.b, Sqr_Input->coeff.c);
+    const double d = Diskr(Sqr_Input->coeff.a, Sqr_Input->coeff.b, Sqr_Input->coeff.c);
 
-    if (DoubleEqual(d, 0))
+    if (Double_Equal(d, 0))
     {
         *x1 = *x2 = -(Sqr_Input->coeff.b / (2 * Sqr_Input->coeff.a));
         return ROOTS_ONE;
     }
-    else if (d > 0)
+    else if (d > EPS)
     {
-        double new_d = sqrt(d) / 2 / Sqr_Input->coeff.a;
-        double new_b = -Sqr_Input->coeff.b / Sqr_Input->coeff.a / 2;
+        const double new_d = sqrt(d) / 2 / Sqr_Input->coeff.a;
+        const double new_b = -Sqr_Input->coeff.b / Sqr_Input->coeff.a / 2;
         *x1 = new_b - new_d;
         *x2 = new_b + new_d;
         return ROOTS_TWO;
@@ -87,41 +93,39 @@ int SqrEq(Equ* const Sqr_Input)   //struct
     else
     {
         return ROOTS_ZERO;
-
-        *x1 = *x2 = NOT_A_ROOT;
     }
 }
 
 //-----------------------------------------------
 
-int LinearEq(Equ* Sqr_Inut)   //struct
+int Linear_Equality(Equality* const Sqr_Inut)   //struct
 {
-    if (! DoubleEqual(Sqr_Inut->coeff.b, 0))
+    assert(Sqr_Inut != 0);
+
+    if (! Double_Equal(Sqr_Inut->coeff.b, 0))
     {
         Sqr_Inut->roots.x1 = Sqr_Inut->roots.x2 = (-Sqr_Inut->coeff.c / Sqr_Inut->coeff.b);
         return ROOTS_ONE;
     }
     else
     {
-        if (! DoubleEqual(Sqr_Inut->coeff.c, 0))
+        if (! Double_Equal(Sqr_Inut->coeff.c, 0))
         {
             return ROOTS_ZERO;
-
-            Sqr_Inut->roots.x1 = Sqr_Inut->roots.x2 = NOT_A_ROOT;
         }
         else
         {
             return ROOTS_INF;
-
-            Sqr_Inut->roots.x1 = Sqr_Inut->roots.x2 = NOT_A_ROOT;
         }
     }
 }
 
 //-----------------------------------------------
 
-void Output_SqrSolution(int res, Equ* const Sqr_Input)  //struct
+void Output_Sqr_Solution(const int res, Equality* const Sqr_Input)  //struct
 {
+    assert(Sqr_Input != 0);
+
     switch (res)
     {
     case ROOTS_ZERO: printf("\nНет решений\n");
